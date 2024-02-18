@@ -1,53 +1,109 @@
-import React from "react";
-import { View, Text, StyleSheet, Button, TouchableOpacity, Modal } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Alert } from "react-native";
 
-const Goalltems = (props) => {
-    console.log("comming from add goals " + props); // Log props to check if onDelete is present
+const GoalItems = (props) => {
+    const [editedGoal, setEditedGoal] = useState(props.title);
+    const [isEditing, setIsEditing] = useState(false);
+    const [showButton,SetShowButtons]=useState(false)
+
+    const handelShowButton=()=>{
+        if(showButton)  SetShowButtons(false)
+        else   SetShowButtons(true)
+
+    } 
+    
+    const handleEdit = () => {
+        setIsEditing(true);
+    };
+
+    const handleSave = () => {
+        props.onEdit(props.id, editedGoal);
+        if(editedGoal === ""){
+            alert("Please Enter Valid Goal!")
+            return;
+        }
+        setIsEditing(false);
+    };
 
     return (
+        <View style={styles.goalContainer}>
 
-        <View style={{}}>
-
-            <Text style={styles.taskcss} >{props.title}</Text>
-            <View style={styles.editdelete}>
-                <View style={styles.innerbutton}>
-                    <Button title="Done" color='#7CFC00' onPress={() => { props.onDone(props.id) }} />
+            {isEditing ? (
+            
+                <View style={styles.editContainer}>
+                    <TextInput
+                        style={styles.input}
+                        value={editedGoal}
+                        onChangeText={setEditedGoal}
+                    />
+                    <View style={styles.editButtons}>
+                        <Button title="Save" color='#7CFC50' onPress={handleSave} />
+                        <Button title="Cancel" color='#E30B1C' onPress={() => setIsEditing(false)} />
+                    </View>
                 </View>
-                <View style={styles.innerbutton}>
-                    <Button title='Edit' color='#7DF9FF'/>
+            ) : (
+                <View>
+                    <TouchableOpacity onPress={handelShowButton}> 
+                    <View>
+                        <Text style={styles.goalText}>{props.title}</Text>
+                    </View>
+                </TouchableOpacity>
+                    { showButton ? (
+                        <View style={styles.buttonsContainer}>
+                        <View style={styles.innerbutton}>                      
+                              <Button title="Done" color='#7CFC50' onPress={() => props.onDone(props.id)} />
+                        </View>
+                        <View style={styles.innerbutton}>
+                            <Button title='Edit' color='#7DF9FF' onPress={handleEdit} />
+                        </View>
+                        <View style={styles.innerbutton}>
+                            <Button title='Delete' color='#E30B1C' onPress={() => props.onDelete(props.id)} />
+                        </View>
+                    </View>
+                        ):(
+                            <View></View>
+                    )}
                 </View>
-                <View style={styles.innerbutton}>
-                    <Button title='Delete' color='red' onPress={() => { props.onDelete(props.id) }} />
-                </View>
-            </View>
-
-        </View>);
+            )}
+        </View>
+    );
 };
 
-
 const styles = StyleSheet.create({
-    taskcss: {
-        backgroundColor: '#d3eafd',
-        borderRadius:5,
-        height:50,
+    goalContainer: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
         margin: 10,
-        fontSize:19,
-        fontFamily: 'sans-serif-ligh',
-        padding:7,
-        textAlign:'center',
-        justifyContent:'center'
+        padding: 10,
     },
-    editdelete: {
+    goalText: {
+        fontSize: 18,
+        marginVertical: 8
+    },
+    editContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    input: {
+        borderBottomWidth: 1,
+        borderColor: 'black',
+        padding: 10,
+        width: '55%',
+    },
+    editButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '40%',
+    },
+    buttonsContainer: {
         flexDirection: "row",
-        justifyContent: 'space-evenly',
-        margin: 10, 
-        
+        justifyContent: "space-evenly",
     },
-    innerbutton: {
-        backgroundcolor:'red',
-       
-        borderRadius:10,
-        width: '25%'
+    innerbutton:{
+        width:'24%',
     }
-})
-export default Goalltems;
+});
+
+export default GoalItems;

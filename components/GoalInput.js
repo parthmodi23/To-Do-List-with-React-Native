@@ -5,18 +5,28 @@ const Goallnput = (props) =>{
 
     const [addGoal, setAddGoal] = useState('')
 
+  const handleAddGoal=(enterdtext)=>{
+    setAddGoal(enterdtext) 
+  }
+
+  const handlenull=(addGoal)=>{
+    if(addGoal==='') {
+      alert("please Enter Valid Goal!")
+      return;
+    }
+  }
 
     return(
 
         <View style={styles.addview}>
         <TextInput style={styles.add}
           placeholder='Add Your Goals'
-          onChangeText={(enterdtext) => { setAddGoal(enterdtext) }}  
+          onChangeText={handleAddGoal}  
         // value={addGoal} use if you wan to directly show a value 
         />
         <View style={styles.Button}>
           <View style={styles.innerbutton} >
-          <Button title='Add' onPress={()=> props.onAddGoal(addGoal)} />
+          <Button title='Add' onPress={()=> {props.onAddGoal(addGoal)}} />
           </View>
           <View style={styles.innerbutton}>
           <Button  title='Cancel' color='red' onPress={()=> props.forvisibility(false)} />
@@ -36,12 +46,11 @@ const styles = StyleSheet.create({
         alignItems: 'center'
       },
       add: {
-        borderBottomWidth: 1,
         margin:20,
         justifyContent:'space-between',
         width: '75%',
-        
-        borderBottomColor: 'Black',
+        borderBottomColor:'red',
+        borderRadius:1
       },
       Button:{
         
