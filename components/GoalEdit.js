@@ -6,7 +6,8 @@ const GoalEdit=(props)=> {
  
   return (
 <View>
-  
+  <Text>
+    </Text>
 </View>
    
   );
